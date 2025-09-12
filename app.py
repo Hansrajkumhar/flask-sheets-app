@@ -3,6 +3,16 @@ import sheet
 
 app = Flask(__name__)
 
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "message": "✅ Flask Sheets API is running",
+        "usage": {
+            "GET": "/run",
+            "POST": "/run with JSON { 'value': 'ProjectName' }"
+        }
+    })
+
 @app.route("/run", methods=["POST", "GET"])
 def run_code():
     try:
@@ -19,4 +29,4 @@ def run_code():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)  # Still use 0.0.0.0 for local network access
+    app.run(host='0.0.0.0', port=5000, debug=True)
