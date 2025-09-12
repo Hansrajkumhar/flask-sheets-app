@@ -24,14 +24,14 @@ def process_projects():
         gc = gspread.service_account(filename=creds_path)
 
         # ✅ Read source sheet
-        sh = gc.open("Test_BTS_10")
-        worksheet = sh.worksheet("Sheet1")
+        sh = gc.open("BTS_10_NEW")
+        worksheet = sh.worksheet("PBT10")
         values = worksheet.get_all_values()
 
         if len(values) < 2:
             raise ValueError("No data found in sheet (need header + 1 row)")
 
-        df = pd.DataFrame(values[1:], columns=values[0])
+        df = pd.DataFrame(values[7:], columns=values[0])
         df["Project"] = df["Project"].astype(str).str.strip()  # remove spaces
 
         # ✅ Filter projects
@@ -40,12 +40,13 @@ def process_projects():
         gaimukh_df = df[df["Project"] == "AIPPL_GAIMUKH"]
 
         # ✅ Write to target sheets
-        sh2 = gc.open("SCRIPT FOR DATA ")
-        ws2 = sh2.worksheet("Sheet3")
-        ws3 = sh2.worksheet("Sheet4")
+        sh2 = gc.open("LLP02756")
+        ws2 = sh2.worksheet("BTS_10")
+        aroor_df_sh3 = gc.open("LLP03275 RAHMAN QADAR")
+        ws3 = aroor_df_sh3.worksheet("BTS_10")
 
         set_with_dataframe(ws2, jaigad_df)
-        set_with_dataframe(ws3, gaimukh_df)
+        set_with_dataframe(ws3, aroor_df)
 
         # ✅ Return summary
         return {
