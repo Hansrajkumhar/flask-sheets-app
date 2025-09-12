@@ -1,4 +1,5 @@
 import os
+import json
 import gspread
 import pandas as pd
 from gspread_dataframe import set_with_dataframe
@@ -13,10 +14,13 @@ def process_projects():
     """
     try:
         # ✅ Authenticate using service account JSON
-        creds_path = os.getenv("GOOGLE_CREDENTIALS_PATH")  # path to your JSON file
-        if not creds_path or not os.path.exists(creds_path):
-            raise ValueError("GOOGLE_CREDENTIALS_PATH environment variable not set or file not found")
+        creds_json = os.getenv("GOOGLE_CREDENTIALS")
+        if not creds_json:
+            raise ValueError("GOOGLE_CREDENTIALS environment variable not set")
 
+        creds_path = "/tmp/temp_credentials.json"
+        with open(creds_path, "w") as f:
+            json.dump(json.loads(creds_json), f)
         gc = gspread.service_account(filename=creds_path)
 
         # ✅ Read source sheet
