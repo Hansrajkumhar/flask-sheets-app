@@ -10,13 +10,13 @@ logging.basicConfig(level=logging.INFO)
 
 def process_projects(project_filters=None):
     """
-    Process Google Sheets data by filtering rows based on projects
+    Process Google Sheets data by filtering rows based on provided projects
     and writing them into another Google Sheet.
-    
+
     Args:
-        project_filters (list[str] or None): List of project names to filter.
-                                             If None, defaults to ["AIPPL_JAIGAD"].
-    
+        project_filters (list[str] or str or None): List of project names to filter.
+                                                    If None or empty, all rows are processed.
+
     Returns:
         dict: Summary information about the processed data.
     """
@@ -28,15 +28,15 @@ def process_projects(project_filters=None):
         raise ValueError("GOOGLE_CREDENTIALS environment variable not set")
 
     try:
-        # ✅ Validate JSON before writing
+        # Validate and write credentials
         creds_dict = json.loads(creds_json)
         with open(creds_path, "w") as f:
             json.dump(creds_dict, f)
 
-        # ✅ Authenticate with gspread
+        # Authenticate with gspread
         gc = gspread.service_account(filename=creds_path)
 
-        # ✅ Source Sheet
+        # Source sheet
         sh = gc.open("Test_BTS_10")
         worksheet = sh.worksheet("Sheet1")
         values = worksheet.get_all_values()
@@ -47,16 +47,24 @@ def process_projects(project_filters=None):
         df = pd.DataFrame(values[1:], columns=values[0])
         total_rows = len(df)
 
-        # ✅ Default projects if not provided
-        if project_filters is None:
-            project_filters = ["AIPPL_JAIGAD"]
+        # Normalize project_filters: convert string to list
+        if isinstance(project_filters, str):
+            project_filters = [project_filters]
 
-        # ✅ Target Sheet
+        # If project_filters is provided, remove empty strings
+        if project_filters:
+            project_filters = [p for p in project_filters if p.strip() != ""]
+            filtered_projects = project_filters
+        else:
+            # If no filter provided, take all unique non-empty project values
+            filtered_projects = df["Project"].dropna().unique().tolist()
+
+        # Target sheet
         sh2 = gc.open("SCRIPT FOR DATA ")
 
         results = {}
-        for i, project in enumerate(project_filters, start=1):
-            filtered_df = df[df["Project"] == project]
+        for i, project in enumerate(filtered_projects, start=1):
+            filtered_df = df[df["Project"] == project] if project_filters else df
 
             try:
                 ws = sh2.worksheet(f"Sheet{i}")
@@ -82,6 +90,6 @@ def process_projects(project_filters=None):
     except Exception as e:
         raise RuntimeError(f"Unexpected error: {str(e)}")
     finally:
-        # ✅ Clean up temp file
+        # Clean up temp credentials
         if os.path.exists(creds_path):
             os.remove(creds_path)
