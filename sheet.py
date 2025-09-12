@@ -45,8 +45,8 @@ def process_projects():
         aroor_df_sh3 = gc.open("LLP03275 RAHMAN QADAR")
         ws3 = aroor_df_sh3.worksheet("BTS_10")
 
-        set_with_dataframe(ws2, jaigad_df)
-        set_with_dataframe(ws3, aroor_df)
+        set_with_dataframe(ws2, jaigad_df, row=9,col=1)
+        set_with_dataframe(ws3, aroor_df, row=9,col=1)
 
         # ✅ Return summary
         return {
