@@ -31,7 +31,8 @@ def process_projects():
         if len(values) < 2:
             raise ValueError("No data found in sheet (need header + 1 row)")
 
-        df = pd.DataFrame(values[7:], columns=values[0])
+        # Row 8 = headers
+        df = pd.DataFrame(values[8:], columns=values[7])
         df["Project"] = df["Project"].astype(str).str.strip()  # remove spaces
 
         # ✅ Filter projects
