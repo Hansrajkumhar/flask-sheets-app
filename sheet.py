@@ -13,15 +13,20 @@ def process_projects():
     - Returns counts
     """
     try:
-        # ✅ Authenticate using service account JSON
+        from google.oauth2.service_account import Credentials
+
         creds_json = os.getenv("GOOGLE_CREDENTIALS")
         if not creds_json:
             raise ValueError("GOOGLE_CREDENTIALS environment variable not set")
 
-        creds_path = "/tmp/temp_credentials.json"
-        with open(creds_path, "w") as f:
-            json.dump(json.loads(creds_json), f)
-        gc = gspread.service_account(filename=creds_path)
+        creds_dict = json.loads(creds_json)  # parse string from env var
+        scopes = [
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive"
+        ]
+        creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
+        gc = gspread.authorize(creds)
+
 
         # ✅ Read source sheet
         sh = gc.open("BTS_10_NEW")
