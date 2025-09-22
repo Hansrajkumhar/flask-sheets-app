@@ -44,15 +44,27 @@ def process_projects():
         aroor_df = df[df["Project"] == "ABL_AROOR-THURAVOOR_KERALA"]
         jaigad_df = df[df["Project"] == "AIPPL_JAIGAD"]
         gaimukh_df = df[df["Project"] == "AIPPL_GAIMUKH"]
+        mumbai_df = df[df['Project'] == 'ABL_SBR9_CIDCO_NAVI MUMBAI']
+        sheela_df = df[df['Project'] == 'ATIPL_SHEELA NAGAR_VISAKHAPATNAM']
+
+        # ✅ Write to target spreadsheets
+        jd_2756 = gc.open("LLP02756")
+        jd_0127 = gc.open("LLP00127")
+        gm_2941 = gc.open("LLP02941 - Pankaj Singh")
+        sn_3273 = gc.open("LLP03273")
+        nm_0981 = gc.open("LLP00981 - GANESH")
+        ar_3275 = gc.open("LLP03275 RAHMAN QADAR")
 
         # ✅ Write to target sheets
-        sh2 = gc.open("LLP02756")
-        ws2 = sh2.worksheet("BTS_10")
-        aroor_df_sh3 = gc.open("LLP03275 RAHMAN QADAR")
-        ws3 = aroor_df_sh3.worksheet("BTS_10")
+        jd_BTS1_10 = jd_2756.worksheet("BTS_10")
+        jd_BTS2_10 = jd_2756.worksheet("BTS_10")
+        gm_BTS__10 = gm_2941.worksheet("BTS_10")
+        sn_BTS__10 = sn_3273.worksheet("BTS_10")
+        nm_BTS__10 = nm_0981.worksheet("BTS_10")    
+        ar_BTS__10 = ar_3275.worksheet("BTS_10")
 
-        set_with_dataframe(ws2, jaigad_df, row=9,col=1)
-        set_with_dataframe(ws3, aroor_df, row=9,col=1)
+        set_with_dataframe(jd_BTS1_10, jaigad_df, row=8,col=1)
+        set_with_dataframe(ar_BTS__10, aroor_df, row=8,col=1)
 
         # ✅ Return summary
         return {
