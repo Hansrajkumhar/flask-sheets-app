@@ -57,14 +57,19 @@ def process_projects():
 
         # ✅ Write to target sheets
         jd_BTS1_10 = jd_2756.worksheet("BTS_10")
-        jd_BTS2_10 = jd_2756.worksheet("BTS_10")
+        jd_BTS2_10 = jd_0127.worksheet("BTS_10")
         gm_BTS__10 = gm_2941.worksheet("BTS_10")
         sn_BTS__10 = sn_3273.worksheet("BTS_10")
         nm_BTS__10 = nm_0981.worksheet("BTS_10")    
         ar_BTS__10 = ar_3275.worksheet("BTS_10")
 
-        set_with_dataframe(jd_BTS1_10, jaigad_df, row=8,col=1)
-        set_with_dataframe(ar_BTS__10, aroor_df, row=8,col=1)
+        set_with_dataframe(jd_BTS1_10, jaigad_df, row=9,col=1,include_column_header=False) # LLP02756
+        set_with_dataframe(jd_BTS2_10, jaigad_df, row=9,col=1,include_column_header=False) # LLP00127
+        set_with_dataframe(gm_BTS__10, gaimukh_df, row=9,col=1,include_column_header=False) # LLP02941
+        set_with_dataframe(sn_BTS__10, sheela_df, row=9,col=1,include_column_header=False) # LLP03273
+        set_with_dataframe(nm_BTS__10, mumbai_df, row=9,col=1,include_column_header=False) # LLP00981
+        set_with_dataframe(ar_BTS__10, aroor_df, row=9,col=1,include_column_header=False) #LLP003275
+        
 
         # ✅ Return summary
         return {
